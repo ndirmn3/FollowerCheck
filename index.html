@@ -9,7 +9,7 @@
 *{box-sizing:border-box}body{margin:0;background:radial-gradient(ellipse at 50% -15%,#252044 0,transparent 48%),var(--bg);color:var(--text);font:15px/1.5 Inter,ui-sans-serif,system-ui,-apple-system,Segoe UI,sans-serif}
 main{max-width:1120px;margin:0 auto;padding:42px 22px 70px}.brand{display:flex;align-items:center;gap:11px;font-weight:800;letter-spacing:-.4px;font-size:19px}.logo{display:grid;place-items:center;width:38px;height:38px;border-radius:12px;background:linear-gradient(135deg,#a78bfa,#60a5fa);color:#10111a;font-size:21px}
 header{margin-bottom:30px}.eyebrow{color:var(--purple);font-size:12px;font-weight:800;text-transform:uppercase;letter-spacing:1.8px;margin-top:36px}h1{font-size:clamp(32px,5vw,48px);line-height:1.1;letter-spacing:-1.7px;margin:10px 0 12px}header p{color:var(--muted);max-width:650px;margin:0;font-size:16px}
-.inputs{display:grid;grid-template-columns:1fr 1fr;gap:16px}.panel{background:linear-gradient(180deg,#171b29,#121621);border:1px solid var(--line);border-radius:18px;padding:19px;min-width:0}.panel-head{display:flex;align-items:center;gap:12px;margin-bottom:10px}.number{width:34px;height:34px;display:grid;place-items:center;border-radius:10px;background:#292344;color:#c4b5fd;font-weight:800}.panel h2{font-size:17px;margin:0}.panel small{color:var(--muted)}textarea{width:100%;height:235px;resize:vertical;background:#0b0e16;border:1px solid #30374a;border-radius:12px;padding:13px;color:#e2e8f0;font:12px/1.55 ui-monospace,SFMono-Regular,Consolas,monospace;outline:none}textarea:focus{border-color:var(--purple);box-shadow:0 0 0 3px #a78bfa20}.hint{font-size:12px;color:var(--muted);margin:9px 0 0}
+.inputs{display:grid;grid-template-columns:1fr 1fr;gap:16px}.panel{background:linear-gradient(180deg,#171b29,#121621);border:1px solid var(--line);border-radius:18px;padding:19px;min-width:0}.panel-head{display:flex;align-items:center;gap:12px;margin-bottom:10px}.number{width:34px;height:34px;display:grid;place-items:center;border-radius:10px;background:#292344;color:#c4b5fd;font-weight:800}.panel h2{font-size:17px;margin:0}.panel small{color:var(--muted)} .input-mode{display:flex;align-items:center;justify-content:space-between;gap:10px;margin:12px 0 8px;color:var(--muted);font-size:12px}.upload-btn{display:inline-flex;align-items:center;justify-content:center;background:#252b3b;border:1px solid #3a4358;color:#e8ebf4;border-radius:8px;padding:7px 10px;font-size:12px;font-weight:750;cursor:pointer;white-space:nowrap}.upload-btn:hover{border-color:var(--purple);color:#d9ccff}.file-input{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}textarea{width:100%;height:235px;resize:vertical;background:#0b0e16;border:1px solid #30374a;border-radius:12px;padding:13px;color:#e2e8f0;font:12px/1.55 ui-monospace,SFMono-Regular,Consolas,monospace;outline:none}textarea:focus{border-color:var(--purple);box-shadow:0 0 0 3px #a78bfa20}.hint{font-size:12px;color:var(--muted);margin:9px 0 0}
 .actions{display:flex;flex-wrap:wrap;gap:10px;align-items:center;margin:18px 0 26px}.btn{border:0;border-radius:11px;padding:12px 18px;font-weight:750;font-size:14px;cursor:pointer;transition:transform .15s,opacity .15s}.btn:hover{transform:translateY(-1px)}.primary{background:linear-gradient(110deg,#a78bfa,#7c9cff);color:#11121b}.secondary{background:#202637;color:#e8ebf4;border:1px solid #333b50}.status{color:var(--muted);font-size:13px;margin-left:auto}
 #error{display:none;background:#3a1722;border:1px solid #7f3046;color:#fecdd3;border-radius:12px;padding:12px 15px;margin:0 0 20px}
 .results{display:none}.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:18px}.stat{border:1px solid var(--line);border-radius:15px;padding:17px;background:var(--panel)}.stat .label{color:var(--muted);font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:.8px}.stat strong{display:block;font-size:30px;letter-spacing:-1px;margin-top:3px}.stat.new strong{color:var(--green)}.stat.lost strong{color:var(--red)}.stat.same strong{color:var(--blue)}
@@ -28,13 +28,15 @@ header{margin-bottom:30px}.eyebrow{color:var(--purple);font-size:12px;font-weigh
 <section class="inputs" aria-label="Follower lists">
   <div class="panel">
     <div class="panel-head"><div class="number">01</div><div><h2>Past followers</h2><small>Your older JSON export</small></div></div>
+    <div class="input-mode"><span>Paste JSON text or upload a file</span><label class="upload-btn" for="pastFile">Upload JSON file</label><input class="file-input" id="pastFile" type="file" accept=".json,application/json,text/plain"></div>
     <textarea id="past" spellcheck="false" placeholder='Paste your past followers JSON here...&#10;&#10;[&#10;  {&#10;    "title": "",&#10;    "string_list_data": [&#10;      { "href": "https://www.instagram.com/example", "value": "example", "timestamp": 1234567890 }&#10;    ]&#10;  }&#10;]'></textarea>
-    <p class="hint">The list from your previous download.</p>
+    <p class="hint" id="pastHint">The list from your previous download. Or choose a .json file above.</p>
   </div>
   <div class="panel">
     <div class="panel-head"><div class="number">02</div><div><h2>Current followers</h2><small>Your newest JSON export</small></div></div>
+    <div class="input-mode"><span>Paste JSON text or upload a file</span><label class="upload-btn" for="currentFile">Upload JSON file</label><input class="file-input" id="currentFile" type="file" accept=".json,application/json,text/plain"></div>
     <textarea id="current" spellcheck="false" placeholder="Paste your current followers JSON here..."></textarea>
-    <p class="hint">The list from your most recent download.</p>
+    <p class="hint" id="currentHint">The list from your most recent download. Or choose a .json file above.</p>
   </div>
 </section>
 <div class="actions">
@@ -159,11 +161,34 @@ function renderList() {
 document.querySelectorAll('.tab').forEach(t=>t.addEventListener('click',()=>{activeTab=t.dataset.tab;document.querySelectorAll('.tab').forEach(x=>x.classList.toggle('active',x===t));renderList()}));
 $('filter').addEventListener('input',renderList);
 $('compare').addEventListener('click',compare);
-$('clear').addEventListener('click',()=>{$('past').value='';$('current').value='';$('results').style.display='none';$('error').style.display='none';$('status').textContent='Your data stays in this browser; nothing is uploaded.';$('filter').value='';window.scrollTo({top:0,behavior:'smooth'})});
+async function loadJsonFile(inputId, textareaId, hintId) {
+  const input = $(inputId);
+  const file = input.files && input.files[0];
+  if (!file) return;
+  try {
+    const contents = await file.text();
+    // Validate that the file is parseable before replacing any existing text.
+    JSON.parse(contents);
+    $(textareaId).value = contents;
+    $(hintId).textContent = 'Loaded: ' + file.name + ' (' + Math.max(1, Math.round(file.size / 1024)) + ' KB). You can still edit or replace the pasted text.';
+    $('status').textContent = file.name + ' loaded locally.';
+    $('error').style.display = 'none';
+  } catch (_) {
+    $('error').textContent = 'Could not read ' + file.name + ' as valid JSON. Choose a valid JSON export file.';
+    $('error').style.display = 'block';
+    input.value = '';
+  }
+}
+$('pastFile').addEventListener('change',()=>loadJsonFile('pastFile','past','pastHint'));
+$('currentFile').addEventListener('change',()=>loadJsonFile('currentFile','current','currentHint'));
+$('clear').addEventListener('click',()=>{$('past').value='';$('current').value='';$('pastFile').value='';$('currentFile').value='';$('pastHint').textContent='The list from your previous download. Or choose a .json file above.';$('currentHint').textContent='The list from your most recent download. Or choose a .json file above.';$('results').style.display='none';$('error').style.display='none';$('status').textContent='Your data stays in this browser; nothing is uploaded.';$('filter').value='';window.scrollTo({top:0,behavior:'smooth'})});
 $('demo').addEventListener('click',()=>{
   const sample = users => JSON.stringify(users.map((username,i)=>({title:'',media_list_data:[],string_list_data:[{href:'https://www.instagram.com/'+username+'/',value:username,timestamp:1700000000+i}]})),null,2);
   $('past').value=sample(['alex.rivera','morganlee','jordan_park','sammydraws']);
   $('current').value=sample(['alex.rivera','jordan_park','taylor.chen','sammydraws','casey_w']);
+  $('pastFile').value='';$('currentFile').value='';
+  $('pastHint').textContent='Sample JSON loaded. Or choose a .json file above.';
+  $('currentHint').textContent='Sample JSON loaded. Or choose a .json file above.';
   $('status').textContent='Sample data loaded — click Compare followers to try it.';
 });
 </script>
