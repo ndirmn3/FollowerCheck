@@ -1,0 +1,171 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>FollowCheck — Follower Comparison</title>
+<style>
+:root{color-scheme:dark;--bg:#0b0d14;--panel:#131722;--panel2:#191f2d;--line:#2b3244;--text:#f3f5fb;--muted:#9ca6ba;--purple:#a78bfa;--green:#4ade80;--red:#fb7185;--blue:#7dd3fc}
+*{box-sizing:border-box}body{margin:0;background:radial-gradient(ellipse at 50% -15%,#252044 0,transparent 48%),var(--bg);color:var(--text);font:15px/1.5 Inter,ui-sans-serif,system-ui,-apple-system,Segoe UI,sans-serif}
+main{max-width:1120px;margin:0 auto;padding:42px 22px 70px}.brand{display:flex;align-items:center;gap:11px;font-weight:800;letter-spacing:-.4px;font-size:19px}.logo{display:grid;place-items:center;width:38px;height:38px;border-radius:12px;background:linear-gradient(135deg,#a78bfa,#60a5fa);color:#10111a;font-size:21px}
+header{margin-bottom:30px}.eyebrow{color:var(--purple);font-size:12px;font-weight:800;text-transform:uppercase;letter-spacing:1.8px;margin-top:36px}h1{font-size:clamp(32px,5vw,48px);line-height:1.1;letter-spacing:-1.7px;margin:10px 0 12px}header p{color:var(--muted);max-width:650px;margin:0;font-size:16px}
+.inputs{display:grid;grid-template-columns:1fr 1fr;gap:16px}.panel{background:linear-gradient(180deg,#171b29,#121621);border:1px solid var(--line);border-radius:18px;padding:19px;min-width:0}.panel-head{display:flex;align-items:center;gap:12px;margin-bottom:10px}.number{width:34px;height:34px;display:grid;place-items:center;border-radius:10px;background:#292344;color:#c4b5fd;font-weight:800}.panel h2{font-size:17px;margin:0}.panel small{color:var(--muted)}textarea{width:100%;height:235px;resize:vertical;background:#0b0e16;border:1px solid #30374a;border-radius:12px;padding:13px;color:#e2e8f0;font:12px/1.55 ui-monospace,SFMono-Regular,Consolas,monospace;outline:none}textarea:focus{border-color:var(--purple);box-shadow:0 0 0 3px #a78bfa20}.hint{font-size:12px;color:var(--muted);margin:9px 0 0}
+.actions{display:flex;flex-wrap:wrap;gap:10px;align-items:center;margin:18px 0 26px}.btn{border:0;border-radius:11px;padding:12px 18px;font-weight:750;font-size:14px;cursor:pointer;transition:transform .15s,opacity .15s}.btn:hover{transform:translateY(-1px)}.primary{background:linear-gradient(110deg,#a78bfa,#7c9cff);color:#11121b}.secondary{background:#202637;color:#e8ebf4;border:1px solid #333b50}.status{color:var(--muted);font-size:13px;margin-left:auto}
+#error{display:none;background:#3a1722;border:1px solid #7f3046;color:#fecdd3;border-radius:12px;padding:12px 15px;margin:0 0 20px}
+.results{display:none}.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:18px}.stat{border:1px solid var(--line);border-radius:15px;padding:17px;background:var(--panel)}.stat .label{color:var(--muted);font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:.8px}.stat strong{display:block;font-size:30px;letter-spacing:-1px;margin-top:3px}.stat.new strong{color:var(--green)}.stat.lost strong{color:var(--red)}.stat.same strong{color:var(--blue)}
+.tabs{display:flex;gap:8px;flex-wrap:wrap;margin:0 0 13px}.tab{background:#171c29;border:1px solid var(--line);color:var(--muted);padding:9px 13px;border-radius:10px;cursor:pointer;font-weight:700}.tab.active{background:#292344;border-color:#7160ad;color:#e9ddff}.search{display:block;width:100%;padding:12px 14px;background:#111520;border:1px solid var(--line);border-radius:11px;color:var(--text);outline:none;margin-bottom:12px}.list{border:1px solid var(--line);border-radius:15px;overflow:hidden;background:var(--panel)}.list-head{display:flex;justify-content:space-between;padding:13px 16px;color:var(--muted);font-size:12px;border-bottom:1px solid var(--line)}.user{display:flex;align-items:center;gap:12px;padding:12px 16px;border-bottom:1px solid #252b3a}.user:last-child{border-bottom:0}.avatar{width:35px;height:35px;display:grid;place-items:center;flex-shrink:0;border-radius:50%;background:#292344;color:#c4b5fd;font-weight:800}.username{font-weight:700;overflow-wrap:anywhere}.user a{color:inherit;text-decoration:none}.user a:hover{color:var(--purple);text-decoration:underline}.tag{font-size:11px;font-weight:800;padding:4px 8px;border-radius:999px;margin-left:auto;white-space:nowrap}.tag.followed{background:#123523;color:#86efac}.tag.unfollowed{background:#3c1b26;color:#fda4af}.empty{padding:30px 18px;text-align:center;color:var(--muted)}.footer{color:#747e92;font-size:12px;margin-top:18px;text-align:center}
+@media(max-width:700px){main{padding:26px 14px 50px}.inputs{grid-template-columns:1fr}.stats{gap:8px}.stat{padding:12px}.stat strong{font-size:25px}.status{width:100%;margin-left:0}textarea{height:190px}}
+</style>
+</head>
+<body>
+<main>
+<header>
+  <div class="brand"><div class="logo">↗</div> FollowCheck</div>
+  <div class="eyebrow">Follower list comparison</div>
+  <h1>Who’s new. Who’s gone.</h1>
+  <p>Compare two Instagram follower exports in seconds. Paste your older list on the left and your latest list on the right to see who followed or unfollowed you.</p>
+</header>
+<section class="inputs" aria-label="Follower lists">
+  <div class="panel">
+    <div class="panel-head"><div class="number">01</div><div><h2>Past followers</h2><small>Your older JSON export</small></div></div>
+    <textarea id="past" spellcheck="false" placeholder='Paste your past followers JSON here...&#10;&#10;[&#10;  {&#10;    "title": "",&#10;    "string_list_data": [&#10;      { "href": "https://www.instagram.com/example", "value": "example", "timestamp": 1234567890 }&#10;    ]&#10;  }&#10;]'></textarea>
+    <p class="hint">The list from your previous download.</p>
+  </div>
+  <div class="panel">
+    <div class="panel-head"><div class="number">02</div><div><h2>Current followers</h2><small>Your newest JSON export</small></div></div>
+    <textarea id="current" spellcheck="false" placeholder="Paste your current followers JSON here..."></textarea>
+    <p class="hint">The list from your most recent download.</p>
+  </div>
+</section>
+<div class="actions">
+  <button class="btn primary" id="compare">Compare followers ↗</button>
+  <button class="btn secondary" id="clear">Clear all</button>
+  <button class="btn secondary" id="demo">Load sample</button>
+  <span class="status" id="status">Your data stays in this browser; nothing is uploaded.</span>
+</div>
+<div id="error" role="alert"></div>
+<section class="results" id="results">
+  <div class="stats">
+    <div class="stat new"><div class="label">New followers</div><strong id="newCount">0</strong></div>
+    <div class="stat lost"><div class="label">Unfollowed</div><strong id="lostCount">0</strong></div>
+    <div class="stat same"><div class="label">Still following</div><strong id="sameCount">0</strong></div>
+  </div>
+  <div class="tabs" role="tablist">
+    <button class="tab active" data-tab="new">Followed you <span id="newTabCount">0</span></button>
+    <button class="tab" data-tab="lost">Unfollowed <span id="lostTabCount">0</span></button>
+    <button class="tab" data-tab="same">Still following <span id="sameTabCount">0</span></button>
+  </div>
+  <input class="search" id="filter" type="search" placeholder="Search usernames..." aria-label="Search usernames">
+  <div class="list">
+    <div class="list-head"><span id="listTitle">NEW FOLLOWERS</span><span id="visibleCount">0 accounts</span></div>
+    <div id="userList"></div>
+  </div>
+  <div class="footer">Comparison is based on usernames. Accounts renamed between exports may appear as a follow and an unfollow.</div>
+</section>
+<div class="footer">FollowCheck • Private by design — all comparison happens locally on your device.</div>
+</main>
+<script>
+const $ = id => document.getElementById(id);
+let parsed = {new:[],lost:[],same:[]}, activeTab = 'new';
+
+function extractUsers(raw, label) {
+  let data;
+  try { data = JSON.parse(raw); }
+  catch (e) { throw new Error(label + ' JSON is invalid. Check that you pasted the complete JSON, including the opening and closing brackets.'); }
+  // Instagram follower exports are usually arrays of objects with string_list_data[].value/href.
+  // Also support the common followers_1.json wrapper/object shape.
+  if (!Array.isArray(data)) {
+    if (data && Array.isArray(data.relationships_followers)) data = data.relationships_followers;
+    else throw new Error(label + ' must be a JSON array of follower entries.');
+  }
+  const users = new Map();
+  for (const entry of data) {
+    if (!entry || typeof entry !== 'object') continue;
+    let items = Array.isArray(entry.string_list_data) ? entry.string_list_data : [];
+    if (!items.length && entry.username) items = [{value: entry.username, href: entry.href || ''}];
+    for (const item of items) {
+      const username = String(item?.value || '').trim().replace(/^@/, '');
+      if (!username) continue;
+      const key = username.toLocaleLowerCase();
+      if (!users.has(key)) users.set(key, {username, href: validInstagramUrl(item.href, username)});
+    }
+  }
+  return users;
+}
+function validInstagramUrl(href, username) {
+  try {
+    const u = new URL(href);
+    if (u.protocol === 'https:' && (u.hostname === 'instagram.com' || u.hostname === 'www.instagram.com')) return u.href;
+  } catch (_) {}
+  return 'https://www.instagram.com/' + encodeURIComponent(username) + '/';
+}
+function compare() {
+  $('error').style.display = 'none';
+  try {
+    const oldRaw = $('past').value.trim(), nowRaw = $('current').value.trim();
+    if (!oldRaw || !nowRaw) throw new Error('Paste both your past and current follower JSON before comparing.');
+    const oldUsers = extractUsers(oldRaw, 'Past followers');
+    const currentUsers = extractUsers(nowRaw, 'Current followers');
+    if (!oldUsers.size && !currentUsers.size) throw new Error('No usernames were found in either list. Make sure these are follower-list JSON files.');
+    const newly = [], lost = [], same = [];
+    for (const [key, user] of currentUsers) (oldUsers.has(key) ? same : newly).push(user);
+    for (const [key, user] of oldUsers) if (!currentUsers.has(key)) lost.push(user);
+    newly.sort((a,b)=>a.username.localeCompare(b.username));
+    lost.sort((a,b)=>a.username.localeCompare(b.username));
+    same.sort((a,b)=>a.username.localeCompare(b.username));
+    parsed = {new:newly,lost,same};
+    $('newCount').textContent = newly.length.toLocaleString();
+    $('lostCount').textContent = lost.length.toLocaleString();
+    $('sameCount').textContent = same.length.toLocaleString();
+    $('newTabCount').textContent = newly.length;
+    $('lostTabCount').textContent = lost.length;
+    $('sameTabCount').textContent = same.length;
+    $('results').style.display = 'block';
+    activeTab = 'new';
+    document.querySelectorAll('.tab').forEach(t=>t.classList.toggle('active',t.dataset.tab===activeTab));
+    $('filter').value = '';
+    renderList();
+    $('status').textContent = `${oldUsers.size.toLocaleString()} past • ${currentUsers.size.toLocaleString()} current accounts compared`;
+    $('results').scrollIntoView({behavior:'smooth',block:'start'});
+  } catch (e) {
+    $('error').textContent = e.message;
+    $('error').style.display = 'block';
+  }
+}
+function renderList() {
+  const names = {new:'NEW FOLLOWERS',lost:'UNFOLLOWED YOU',same:'STILL FOLLOWING'};
+  const users = parsed[activeTab].filter(u=>u.username.toLocaleLowerCase().includes($('filter').value.trim().toLocaleLowerCase()));
+  $('listTitle').textContent = names[activeTab];
+  $('visibleCount').textContent = `${users.length.toLocaleString()} account${users.length===1?'':'s'}`;
+  const list = $('userList');
+  list.replaceChildren();
+  if (!users.length) {
+    const empty = document.createElement('div'); empty.className='empty';
+    empty.textContent = $('filter').value ? 'No usernames match your search.' : 'No accounts in this category.';
+    list.appendChild(empty); return;
+  }
+  const fragment = document.createDocumentFragment();
+  for (const user of users) {
+    const row=document.createElement('div'); row.className='user';
+    const avatar=document.createElement('div'); avatar.className='avatar'; avatar.textContent=user.username.replace(/[^a-z0-9]/ig,'').slice(0,1).toUpperCase()||'?';
+    const name=document.createElement('div'); name.className='username';
+    const link=document.createElement('a'); link.href=user.href; link.target='_blank'; link.rel='noopener noreferrer'; link.textContent='@'+user.username;
+    name.appendChild(link);
+    const tag=document.createElement('span'); tag.className='tag '+(activeTab==='new'?'followed':activeTab==='lost'?'unfollowed':'followed'); tag.textContent=activeTab==='new'?'NEW FOLLOWER':activeTab==='lost'?'UNFOLLOWED':'CURRENT';
+    row.append(avatar,name,tag); fragment.appendChild(row);
+  }
+  list.appendChild(fragment);
+}
+document.querySelectorAll('.tab').forEach(t=>t.addEventListener('click',()=>{activeTab=t.dataset.tab;document.querySelectorAll('.tab').forEach(x=>x.classList.toggle('active',x===t));renderList()}));
+$('filter').addEventListener('input',renderList);
+$('compare').addEventListener('click',compare);
+$('clear').addEventListener('click',()=>{$('past').value='';$('current').value='';$('results').style.display='none';$('error').style.display='none';$('status').textContent='Your data stays in this browser; nothing is uploaded.';$('filter').value='';window.scrollTo({top:0,behavior:'smooth'})});
+$('demo').addEventListener('click',()=>{
+  const sample = users => JSON.stringify(users.map((username,i)=>({title:'',media_list_data:[],string_list_data:[{href:'https://www.instagram.com/'+username+'/',value:username,timestamp:1700000000+i}]})),null,2);
+  $('past').value=sample(['alex.rivera','morganlee','jordan_park','sammydraws']);
+  $('current').value=sample(['alex.rivera','jordan_park','taylor.chen','sammydraws','casey_w']);
+  $('status').textContent='Sample data loaded — click Compare followers to try it.';
+});
+</script>
+</body>
+</html>
