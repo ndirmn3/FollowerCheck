@@ -1,4 +1,4 @@
-# FollowCheck
+# FollowerCheck
 Compare past and current followers
 
 Paste your old JSON on the left and your new JSON on the right.
