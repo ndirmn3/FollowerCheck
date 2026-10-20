@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>FollowCheck — Follower Comparison</title>
+<title>FollowerCheck — Follower Comparison</title>
 <style>
 :root{color-scheme:dark;--bg:#0b0d14;--panel:#131722;--panel2:#191f2d;--line:#2b3244;--text:#f3f5fb;--muted:#9ca6ba;--purple:#a78bfa;--green:#4ade80;--red:#fb7185;--blue:#7dd3fc}
 *{box-sizing:border-box}body{margin:0;background:radial-gradient(ellipse at 50% -15%,#252044 0,transparent 48%),var(--bg);color:var(--text);font:15px/1.5 Inter,ui-sans-serif,system-ui,-apple-system,Segoe UI,sans-serif}
@@ -20,7 +20,7 @@ header{margin-bottom:30px}.eyebrow{color:var(--purple);font-size:12px;font-weigh
 <body>
 <main>
 <header>
-  <div class="brand"><div class="logo">↗</div> FollowCheck</div>
+  <div class="brand"><div class="logo">↗</div> FollowerCheck</div>
   <div class="eyebrow">Follower list comparison</div>
   <h1>Who’s new. Who’s gone.</h1>
   <p>Compare two Instagram follower exports in seconds. Paste your older list on the left and your latest list on the right to see who followed or unfollowed you.</p>
@@ -52,6 +52,14 @@ header{margin-bottom:30px}.eyebrow{color:var(--purple);font-size:12px;font-weigh
     <div class="stat lost"><div class="label">Unfollowed</div><strong id="lostCount">0</strong></div>
     <div class="stat same"><div class="label">Still following</div><strong id="sameCount">0</strong></div>
   </div>
+  <div class="sort-row" style="display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin:0 0 13px;color:var(--muted);font-size:13px">
+    <label for="sortOrder">Sort all tabs by</label>
+    <select id="sortOrder" style="background:#111520;border:1px solid var(--line);border-radius:9px;color:var(--text);padding:9px 12px">
+      <option value="recent">Most recent first</option>
+      <option value="alpha">Alphabetical (A–Z)</option>
+    </select>
+    <span>Changing this updates every tab.</span>
+  </div>
   <div class="tabs" role="tablist">
     <button class="tab active" data-tab="new">Followed you <span id="newTabCount">0</span></button>
     <button class="tab" data-tab="lost">Unfollowed <span id="lostTabCount">0</span></button>
@@ -64,11 +72,12 @@ header{margin-bottom:30px}.eyebrow{color:var(--purple);font-size:12px;font-weigh
   </div>
   <div class="footer">Comparison is based on usernames. Accounts renamed between exports may appear as a follow and an unfollow.</div>
 </section>
-<div class="footer">FollowCheck • Private by design — all comparison happens locally on your device.</div>
+<div class="footer">FollowerCheck • Private by design — all comparison happens locally on your device.</div>
 </main>
 <script>
 const $ = id => document.getElementById(id);
 let parsed = {new:[],lost:[],same:[]}, activeTab = 'new';
+let sortOrder = 'recent';
 
 function extractUsers(raw, label) {
   let data;
@@ -89,7 +98,7 @@ function extractUsers(raw, label) {
       const username = String(item?.value || '').trim().replace(/^@/, '');
       if (!username) continue;
       const key = username.toLocaleLowerCase();
-      if (!users.has(key)) users.set(key, {username, href: validInstagramUrl(item.href, username)});
+      if (!users.has(key)) users.set(key, {username, href: validInstagramUrl(item.href, username), timestamp: Number(item?.timestamp) || 0});
     }
   }
   return users;
@@ -112,9 +121,7 @@ function compare() {
     const newly = [], lost = [], same = [];
     for (const [key, user] of currentUsers) (oldUsers.has(key) ? same : newly).push(user);
     for (const [key, user] of oldUsers) if (!currentUsers.has(key)) lost.push(user);
-    newly.sort((a,b)=>a.username.localeCompare(b.username));
-    lost.sort((a,b)=>a.username.localeCompare(b.username));
-    same.sort((a,b)=>a.username.localeCompare(b.username));
+    // Sorting is applied in renderList so one shared setting controls every tab.
     parsed = {new:newly,lost,same};
     $('newCount').textContent = newly.length.toLocaleString();
     $('lostCount').textContent = lost.length.toLocaleString();
@@ -137,6 +144,9 @@ function compare() {
 function renderList() {
   const names = {new:'NEW FOLLOWERS',lost:'UNFOLLOWED YOU',same:'STILL FOLLOWING'};
   const users = parsed[activeTab].filter(u=>u.username.toLocaleLowerCase().includes($('filter').value.trim().toLocaleLowerCase()));
+  users.sort((a,b)=> sortOrder === 'alpha'
+    ? a.username.localeCompare(b.username, undefined, {sensitivity:'base'})
+    : (b.timestamp - a.timestamp) || a.username.localeCompare(b.username, undefined, {sensitivity:'base'}));
   $('listTitle').textContent = names[activeTab];
   $('visibleCount').textContent = `${users.length.toLocaleString()} account${users.length===1?'':'s'}`;
   const list = $('userList');
@@ -160,6 +170,7 @@ function renderList() {
 }
 document.querySelectorAll('.tab').forEach(t=>t.addEventListener('click',()=>{activeTab=t.dataset.tab;document.querySelectorAll('.tab').forEach(x=>x.classList.toggle('active',x===t));renderList()}));
 $('filter').addEventListener('input',renderList);
+$('sortOrder').addEventListener('change',()=>{sortOrder=$('sortOrder').value;renderList()});
 $('compare').addEventListener('click',compare);
 async function loadJsonFile(inputId, textareaId, hintId) {
   const input = $(inputId);
