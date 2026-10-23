@@ -4,16 +4,21 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>FollowerCheck — Follower Comparison</title>
+<link rel="icon" href="favicon.ico" sizes="any">
 <style>
 :root{color-scheme:dark;--bg:#0b0d14;--panel:#131722;--panel2:#191f2d;--line:#2b3244;--text:#f3f5fb;--muted:#9ca6ba;--purple:#a78bfa;--green:#4ade80;--red:#fb7185;--blue:#7dd3fc}
-*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--text);font:15px/1.5 Inter,ui-sans-serif,system-ui,-apple-system,Segoe UI,sans-serif}
+*{box-sizing:border-box}body{margin:0;background:radial-gradient(ellipse at 50% -15%,#252044 0,transparent 48%),var(--bg);color:var(--text);font:15px/1.5 Inter,ui-sans-serif,system-ui,-apple-system,Segoe UI,sans-serif}
 main{max-width:1120px;margin:0 auto;padding:42px 22px 70px}.brand{display:flex;align-items:center;gap:11px;font-weight:800;letter-spacing:-.4px;font-size:19px}.logo{display:grid;place-items:center;width:38px;height:38px;border-radius:12px;background:linear-gradient(135deg,#a78bfa,#60a5fa);color:#10111a;font-size:21px}
 header{margin-bottom:30px}.eyebrow{color:var(--purple);font-size:12px;font-weight:800;text-transform:uppercase;letter-spacing:1.8px;margin-top:36px}h1{font-size:clamp(32px,5vw,48px);line-height:1.1;letter-spacing:-1.7px;margin:10px 0 12px}header p{color:var(--muted);max-width:650px;margin:0;font-size:16px}
 .inputs{display:grid;grid-template-columns:1fr 1fr;gap:16px}.panel{background:linear-gradient(180deg,#171b29,#121621);border:1px solid var(--line);border-radius:18px;padding:19px;min-width:0}.panel-head{display:flex;align-items:center;gap:12px;margin-bottom:10px}.number{width:34px;height:34px;display:grid;place-items:center;border-radius:10px;background:#292344;color:#c4b5fd;font-weight:800}.panel h2{font-size:17px;margin:0}.panel small{color:var(--muted)} .input-mode{display:flex;align-items:center;justify-content:space-between;gap:10px;margin:12px 0 8px;color:var(--muted);font-size:12px}.upload-btn{display:inline-flex;align-items:center;justify-content:center;background:#252b3b;border:1px solid #3a4358;color:#e8ebf4;border-radius:8px;padding:7px 10px;font-size:12px;font-weight:750;cursor:pointer;white-space:nowrap}.upload-btn:hover{border-color:var(--purple);color:#d9ccff}.file-input{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}textarea{width:100%;height:235px;resize:vertical;background:#0b0e16;border:1px solid #30374a;border-radius:12px;padding:13px;color:#e2e8f0;font:12px/1.55 ui-monospace,SFMono-Regular,Consolas,monospace;outline:none}textarea:focus{border-color:var(--purple);box-shadow:0 0 0 3px #a78bfa20}.hint{font-size:12px;color:var(--muted);margin:9px 0 0}
-.actions{display:flex;flex-wrap:wrap;gap:10px;align-items:center;margin:18px 0 26px}.btn{border:0;border-radius:11px;padding:12px 18px;font-weight:750;font-size:14px;cursor:pointer;transition:transform .2s ease,opacity .2s ease,background .2s ease,box-shadow .2s ease}.btn:hover{transform:translateY(-1px)}.primary{background:linear-gradient(110deg,#a78bfa,#7c9cff);color:#11121b}.secondary{background:#202637;color:#e8ebf4;border:1px solid #333b50}.status{color:var(--muted);font-size:13px;margin-left:auto}
+.actions{display:flex;flex-wrap:wrap;gap:10px;align-items:center;margin:18px 0 26px}.btn{border:0;border-radius:11px;padding:12px 18px;font-weight:750;font-size:14px;cursor:pointer;transition:transform .15s,opacity .15s}.btn:hover{transform:translateY(-1px)}.primary{background:linear-gradient(110deg,#a78bfa,#7c9cff);color:#11121b}.secondary{background:#202637;color:#e8ebf4;border:1px solid #333b50}.status{color:var(--muted);font-size:13px;margin-left:auto}
 #error{display:none;background:#3a1722;border:1px solid #7f3046;color:#fecdd3;border-radius:12px;padding:12px 15px;margin:0 0 20px}
 .results{display:none}.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:18px}.stat{border:1px solid var(--line);border-radius:15px;padding:17px;background:var(--panel)}.stat .label{color:var(--muted);font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:.8px}.stat strong{display:block;font-size:30px;letter-spacing:-1px;margin-top:3px}.stat.new strong{color:var(--green)}.stat.lost strong{color:var(--red)}.stat.same strong{color:var(--blue)}
-.tabs{display:flex;gap:8px;flex-wrap:wrap;margin:0 0 13px}.tab{background:#171c29;border:1px solid var(--line);color:var(--muted);padding:9px 13px;border-radius:10px;cursor:pointer;font-weight:700;transition:background .22s ease,color .22s ease,border-color .22s ease,transform .22s ease}.tab.active{background:#292344;border-color:#7160ad;color:#e9ddff}.tab:hover{transform:translateY(-1px)}.search{display:block;width:100%;padding:12px 14px;background:#111520;border:1px solid var(--line);border-radius:11px;color:var(--text);outline:none;margin-bottom:12px}.list{border:1px solid var(--line);border-radius:15px;overflow:hidden;background:var(--panel)}.list-head{display:flex;justify-content:space-between;padding:13px 16px;color:var(--muted);font-size:12px;border-bottom:1px solid var(--line)}.user{display:flex;align-items:center;gap:12px;padding:12px 16px;border-bottom:1px solid #252b3a;animation:rowIn .24s ease both;transition:background .18s ease}.user:hover{background:#191f2d}.user:last-child{border-bottom:0}.avatar{width:35px;height:35px;display:grid;place-items:center;flex-shrink:0;border-radius:50%;background:#292344;color:#c4b5fd;font-weight:800}.username{font-weight:700;overflow-wrap:anywhere}.user a{color:inherit;text-decoration:none}.user a:hover{color:var(--purple);text-decoration:underline}.tag{font-size:11px;font-weight:800;padding:4px 8px;border-radius:999px;margin-left:auto;white-space:nowrap}.tag.followed{background:#123523;color:#86efac}.tag.unfollowed{background:#3c1b26;color:#fda4af}.empty{padding:30px 18px;text-align:center;color:var(--muted)}.footer{color:#747e92;font-size:12px;margin-top:18px;text-align:center}.results{animation:fadeUp .32s ease both}.stat{transition:transform .2s ease,border-color .2s ease}.stat:hover{transform:translateY(-2px);border-color:#424b62}@keyframes fadeUp{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}@keyframes rowIn{from{opacity:0;transform:translateY(5px)}to{opacity:1;transform:translateY(0)}}.btn:active,.upload-btn:active{transform:scale(.98)}@media(prefers-reduced-motion:reduce){*,*::before,*::after{animation-duration:.01ms!important;animation-iteration-count:1!important;scroll-behavior:auto!important;transition-duration:.01ms!important}}
+.tabs{display:flex;gap:8px;flex-wrap:wrap;margin:0 0 13px}.tab{background:#171c29;border:1px solid var(--line);color:var(--muted);padding:9px 13px;border-radius:10px;cursor:pointer;font-weight:700}.tab.active{background:#292344;border-color:#7160ad;color:#e9ddff}.search{display:block;width:100%;padding:12px 14px;background:#111520;border:1px solid var(--line);border-radius:11px;color:var(--text);outline:none;margin-bottom:12px}.list{border:1px solid var(--line);border-radius:15px;overflow:hidden;background:var(--panel)}.list-head{display:flex;justify-content:space-between;padding:13px 16px;color:var(--muted);font-size:12px;border-bottom:1px solid var(--line)}.user{display:flex;align-items:center;gap:12px;padding:12px 16px;border-bottom:1px solid #252b3a}.user:last-child{border-bottom:0}.avatar{width:35px;height:35px;display:grid;place-items:center;flex-shrink:0;border-radius:50%;background:#292344;color:#c4b5fd;font-weight:800}.username{font-weight:700;overflow-wrap:anywhere}.user a{color:inherit;text-decoration:none}.user a:hover{color:var(--purple);text-decoration:underline}.tag{font-size:11px;font-weight:800;padding:4px 8px;border-radius:999px;margin-left:auto;white-space:nowrap}.tag.followed{background:#123523;color:#86efac}.tag.unfollowed{background:#3c1b26;color:#fda4af}.empty{padding:30px 18px;text-align:center;color:var(--muted)}.footer{color:#747e92;font-size:12px;margin-top:18px;text-align:center}
+/* Find who doesn't follow back */
+.backcheck{margin-top:42px;padding-top:30px;border-top:1px solid var(--line);animation:fadeUp .45s ease both}.backcheck-intro{margin:0 0 18px;color:var(--muted);max-width:720px}.backcheck .inputs{margin-bottom:0}.backcheck .panel{background:linear-gradient(180deg,#171b29,#121621)}.backcheck textarea{height:200px}.backcheck-actions{display:flex;flex-wrap:wrap;align-items:center;gap:10px;margin:16px 0 18px}.zip-all{background:linear-gradient(110deg,#292344,#252b3b);border:1px solid #7160ad;color:#e9ddff}.back-results{display:none;margin-top:18px;animation:fadeUp .35s ease both}.back-results .list{margin-top:12px}.back-results .user{animation:fadeUp .25s ease both}.back-results .user:nth-child(2n){background:#151a27}.back-status{color:var(--muted);font-size:13px;margin-left:auto}.back-error{display:none;background:#3a1722;border:1px solid #7f3046;color:#fecdd3;border-radius:12px;padding:12px 15px;margin:0 0 16px}.back-summary{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;border:1px solid var(--line);border-radius:14px;padding:15px 17px;background:var(--panel)}.back-summary strong{font-size:26px;color:var(--red)}
+@keyframes fadeUp{from{opacity:0;transform:translateY(7px)}to{opacity:1;transform:translateY(0)}}
+@media(prefers-reduced-motion:reduce){.backcheck,.back-results,.back-results .user{animation:none}}
 @media(max-width:700px){main{padding:26px 14px 50px}.inputs{grid-template-columns:1fr}.stats{gap:8px}.stat{padding:12px}.stat strong{font-size:25px}.status{width:100%;margin-left:0}textarea{height:190px}}
 </style>
 </head>
@@ -53,8 +58,7 @@ header{margin-bottom:30px}.eyebrow{color:var(--purple);font-size:12px;font-weigh
     <div class="stat same"><div class="label">Still following</div><strong id="sameCount">0</strong></div>
   </div>
   <div class="sort-row" style="display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin:0 0 13px;color:var(--muted);font-size:13px">
-    <span>Sort all tabs by</span>
-    <button class="btn secondary" id="sortOrder" type="button" aria-live="polite">Most recent first ↓</button>
+    <button class="btn secondary" id="sortOrder" type="button">Sort: Most recent first ↓</button>
     <span>Click to cycle sorting for every tab.</span>
   </div>
   <div class="tabs" role="tablist">
@@ -69,24 +73,46 @@ header{margin-bottom:30px}.eyebrow{color:var(--purple);font-size:12px;font-weigh
   </div>
   <div class="footer">Comparison is based on usernames. Accounts renamed between exports may appear as a follow and an unfollow.</div>
 </section>
+<section class="backcheck" id="backcheck" aria-labelledby="backcheckTitle">
+  <div class="eyebrow" style="margin-top:0">A second check</div>
+  <h2 id="backcheckTitle" style="font-size:clamp(25px,3vw,34px);letter-spacing:-.8px;margin:8px 0 10px">Who doesn’t follow you back?</h2>
+  <p class="backcheck-intro">Compare your Instagram <strong>followers</strong> with the accounts you’re <strong>following</strong>. This lists accounts you follow that aren’t following you back. You can paste JSON, upload each JSON separately, or upload one Instagram export ZIP to fill both fields.</p>
+  <div class="inputs" aria-label="Followers and following JSON">
+    <div class="panel">
+      <div class="panel-head"><div class="number">01</div><div><h2>Followers JSON</h2><small>Accounts that follow you</small></div></div>
+      <div class="input-mode"><span>Paste JSON or upload a file</span><label class="upload-btn" for="backFollowersFile">Upload JSON file</label><input class="file-input" id="backFollowersFile" type="file" accept=".json,application/json,text/plain"></div>
+      <textarea id="backFollowers" spellcheck="false" placeholder='Paste followers_1.json here...'></textarea>
+      <p class="hint" id="backFollowersHint">Instagram export file is usually named followers_1.json.</p>
+    </div>
+    <div class="panel">
+      <div class="panel-head"><div class="number">02</div><div><h2>Following JSON</h2><small>Accounts you follow</small></div></div>
+      <div class="input-mode"><span>Paste JSON or upload a file</span><label class="upload-btn" for="backFollowingFile">Upload JSON file</label><input class="file-input" id="backFollowingFile" type="file" accept=".json,application/json,text/plain"></div>
+      <textarea id="backFollowing" spellcheck="false" placeholder='Paste following.json here...'></textarea>
+      <p class="hint" id="backFollowingHint">Instagram export file is usually named following.json.</p>
+    </div>
+  </div>
+  <div class="backcheck-actions">
+    <button class="btn primary" id="backCompare">Find who doesn’t follow back ↗</button>
+    <button class="btn secondary" id="backZipButton">Upload Instagram ZIP</button><input class="file-input" id="backZip" type="file" accept=".zip,application/zip,application/x-zip-compressed">
+    <button class="btn secondary" id="backClear">Clear</button>
+    <button class="btn secondary" id="backDemo">Load sample</button>
+    <span class="back-status" id="backStatus">Your data stays in this browser.</span>
+  </div>
+  <div class="back-error" id="backError" role="alert"></div>
+  <section class="back-results" id="backResults" aria-live="polite">
+    <div class="back-summary"><div><div class="label" style="color:var(--muted);font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:.8px">They don’t follow you back</div><div style="color:var(--muted);font-size:13px;margin-top:4px">Accounts you follow that aren’t in your followers list</div></div><strong id="backCount">0</strong></div>
+    <div class="list"><div class="list-head"><span>NOT FOLLOWING YOU BACK</span><span id="backVisibleCount">0 accounts</span></div><div id="backUserList"></div></div>
+  </section>
+</section>
 <div class="footer">FollowerCheck • Private by design — all comparison happens locally on your device.</div>
 </main>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
 <script>
 const $ = id => document.getElementById(id);
 let parsed = {new:[],lost:[],same:[]}, activeTab = 'new';
-const sortModes = [
-  {key:'recent', label:'Most recent first ↓'},
-  {key:'oldest', label:'Least recent first ↑'},
-  {key:'alpha', label:'Alphabetical (A–Z) ↕'}
-];
 let sortOrder = 'recent';
-function cycleSortOrder() {
-  const index = sortModes.findIndex(mode => mode.key === sortOrder);
-  sortOrder = sortModes[(index + 1) % sortModes.length].key;
-  $('sortOrder').textContent = sortModes.find(mode => mode.key === sortOrder).label;
-  renderList();
-}
+const sortModes = ['recent','oldest','alpha'];
+const sortLabels = {recent:'Sort: Most recent first ↓',oldest:'Sort: Least recent first ↑',alpha:'Sort: Alphabetical (A–Z)'};
 
 function extractUsers(raw, label) {
   let data;
@@ -153,12 +179,11 @@ function compare() {
 function renderList() {
   const names = {new:'NEW FOLLOWERS',lost:'UNFOLLOWED YOU',same:'STILL FOLLOWING'};
   const users = parsed[activeTab].filter(u=>u.username.toLocaleLowerCase().includes($('filter').value.trim().toLocaleLowerCase()));
-  users.sort((a,b)=> {
-    const byName = a.username.localeCompare(b.username, undefined, {sensitivity:'base'});
-    if (sortOrder === 'alpha') return byName;
-    const timeDifference = sortOrder === 'oldest' ? a.timestamp - b.timestamp : b.timestamp - a.timestamp;
-    return timeDifference || byName;
-  });
+  users.sort((a,b)=> sortOrder === 'alpha'
+    ? a.username.localeCompare(b.username, undefined, {sensitivity:'base'})
+    : sortOrder === 'oldest'
+      ? (a.timestamp - b.timestamp) || a.username.localeCompare(b.username, undefined, {sensitivity:'base'})
+      : (b.timestamp - a.timestamp) || a.username.localeCompare(b.username, undefined, {sensitivity:'base'}));
   $('listTitle').textContent = names[activeTab];
   $('visibleCount').textContent = `${users.length.toLocaleString()} account${users.length===1?'':'s'}`;
   const list = $('userList');
@@ -182,7 +207,7 @@ function renderList() {
 }
 document.querySelectorAll('.tab').forEach(t=>t.addEventListener('click',()=>{activeTab=t.dataset.tab;document.querySelectorAll('.tab').forEach(x=>x.classList.toggle('active',x===t));renderList()}));
 $('filter').addEventListener('input',renderList);
-$('sortOrder').addEventListener('click',cycleSortOrder);
+$('sortOrder').addEventListener('click',()=>{sortOrder=sortModes[(sortModes.indexOf(sortOrder)+1)%sortModes.length];$('sortOrder').textContent=sortLabels[sortOrder];renderList()});
 $('compare').addEventListener('click',compare);
 async function loadJsonFile(inputId, textareaId, hintId) {
   const input = $(inputId);
@@ -258,6 +283,128 @@ $('demo').addEventListener('click',()=>{
   $('currentHint').textContent='Sample JSON loaded. Or choose a .json file or Instagram ZIP above.';
   $('status').textContent='Sample data loaded — click Compare followers to try it.';
 });
+
+
+// Secondary tool: accounts the user follows who do not follow them back.
+function parseRelationshipUsers(raw, label, kind) {
+  let data;
+  try { data = JSON.parse(raw); }
+  catch (_) { throw new Error(label + ' JSON is invalid. Check that the full JSON file was pasted.'); }
+  const wrapperKey = kind === 'followers' ? 'relationships_followers' : 'relationships_following';
+  if (!Array.isArray(data)) {
+    if (data && Array.isArray(data[wrapperKey])) data = data[wrapperKey];
+    else throw new Error(label + ' must contain an array of Instagram account entries.');
+  }
+  const users = new Map();
+  for (const entry of data) {
+    if (!entry || typeof entry !== 'object') continue;
+    const items = Array.isArray(entry.string_list_data) ? entry.string_list_data : [];
+    // In following.json Instagram commonly stores the username in entry.title,
+    // while followers_1.json usually stores it in string_list_data[].value.
+    const candidates = items.length ? items : [{}];
+    for (const item of candidates) {
+      const username = String(item?.value || entry.title || entry.username || '').trim().replace(/^@/, '');
+      if (!username) continue;
+      const key = username.toLocaleLowerCase();
+      if (!users.has(key)) users.set(key, {username, href: validInstagramUrl(item?.href || entry.href, username)});
+    }
+  }
+  return users;
+}
+function showBackError(message) { $('backError').textContent = message; $('backError').style.display = 'block'; }
+function hideBackError() { $('backError').style.display = 'none'; }
+function compareBackcheck() {
+  hideBackError();
+  try {
+    const followersRaw = $('backFollowers').value.trim();
+    const followingRaw = $('backFollowing').value.trim();
+    if (!followersRaw || !followingRaw) throw new Error('Add both your followers JSON and following JSON before comparing.');
+    const followers = parseRelationshipUsers(followersRaw, 'Followers', 'followers');
+    const following = parseRelationshipUsers(followingRaw, 'Following', 'following');
+    if (!followers.size && !following.size) throw new Error('No usernames were found. Make sure these are your Instagram followers and following JSON files.');
+    const notBack = [...following].filter(([key]) => !followers.has(key)).map(([, user]) => user);
+    notBack.sort((a,b) => a.username.localeCompare(b.username, undefined, {sensitivity:'base'}));
+    $('backCount').textContent = notBack.length.toLocaleString();
+    $('backVisibleCount').textContent = `${notBack.length.toLocaleString()} account${notBack.length === 1 ? '' : 's'}`;
+    const list = $('backUserList'); list.replaceChildren();
+    if (!notBack.length) {
+      const empty = document.createElement('div'); empty.className = 'empty'; empty.textContent = 'Everyone you follow appears to follow you back.'; list.appendChild(empty);
+    } else {
+      const fragment = document.createDocumentFragment();
+      for (const user of notBack) {
+        const row = document.createElement('div'); row.className = 'user';
+        const avatar = document.createElement('div'); avatar.className = 'avatar'; avatar.textContent = user.username.replace(/[^a-z0-9]/ig,'').slice(0,1).toUpperCase() || '?';
+        const name = document.createElement('div'); name.className = 'username';
+        const link = document.createElement('a'); link.href = user.href; link.target = '_blank'; link.rel = 'noopener noreferrer'; link.textContent = '@' + user.username;
+        name.appendChild(link);
+        const tag = document.createElement('span'); tag.className = 'tag unfollowed'; tag.textContent = 'NO FOLLOW BACK';
+        row.append(avatar, name, tag); fragment.appendChild(row);
+      }
+      list.appendChild(fragment);
+    }
+    $('backResults').style.display = 'block';
+    $('backStatus').textContent = `${following.size.toLocaleString()} following • ${followers.size.toLocaleString()} followers checked`;
+    $('backResults').scrollIntoView({behavior:'smooth', block:'nearest'});
+  } catch (e) { showBackError(e.message || 'Could not compare these files.'); }
+}
+async function loadBackJson(inputId, textareaId, hintId, label) {
+  const input = $(inputId), file = input.files && input.files[0]; if (!file) return;
+  try {
+    const contents = await file.text(); JSON.parse(contents);
+    $(textareaId).value = contents;
+    $(hintId).textContent = 'Loaded ' + file.name + '. JSON is editable below.';
+    $('backStatus').textContent = file.name + ' loaded locally.'; hideBackError();
+  } catch (_) { showBackError('Could not read ' + file.name + ' as valid JSON.'); }
+  input.value = '';
+}
+$('backFollowersFile').addEventListener('change', () => loadBackJson('backFollowersFile','backFollowers','backFollowersHint','Followers'));
+$('backFollowingFile').addEventListener('change', () => loadBackJson('backFollowingFile','backFollowing','backFollowingHint','Following'));
+$('backCompare').addEventListener('click', compareBackcheck);
+$('backZipButton').addEventListener('click', () => $('backZip').click());
+$('backZip').addEventListener('change', async () => {
+  const input = $('backZip'), file = input.files && input.files[0]; if (!file) return;
+  hideBackError();
+  try {
+    if (!window.JSZip) throw new Error('The ZIP reader could not load. Check your internet connection and try again.');
+    $('backStatus').textContent = 'Reading ' + file.name + ' locally…';
+    const zip = await JSZip.loadAsync(file);
+    const jsonEntries = Object.values(zip.files).filter(e => !e.dir && /\.json$/i.test(e.name));
+    const basename = e => e.name.split('/').pop().toLowerCase();
+    // Use the standard Instagram filenames and match basenames only, not parent folders.
+    const followingEntry = jsonEntries.find(e => basename(e) === 'following.json');
+    const followerEntries = jsonEntries.filter(e => /^followers(?:_\d+)?\.json$/i.test(basename(e)));
+    followerEntries.sort((a,b) => {
+      const rank = e => basename(e) === 'followers_1.json' ? 0 : basename(e) === 'followers.json' ? 1 : 2;
+      return rank(a) - rank(b) || basename(a).localeCompare(basename(b));
+    });
+    const followersEntry = followerEntries[0];
+    if (!followingEntry || !followersEntry) {
+      const missing = [!followersEntry ? 'followers_1.json (followers)' : '', !followingEntry ? 'following.json (accounts you follow)' : ''].filter(Boolean).join(' and ');
+      throw new Error('Could not find ' + missing + ' in this ZIP. Choose your full Instagram export ZIP.');
+    }
+    const [followersText, followingText] = await Promise.all([followersEntry.async('text'), followingEntry.async('text')]);
+    JSON.parse(followersText); JSON.parse(followingText);
+    $('backFollowers').value = followersText; $('backFollowing').value = followingText;
+    $('backFollowersHint').textContent = 'Loaded ' + followersEntry.name + ' from ' + file.name + '.';
+    $('backFollowingHint').textContent = 'Loaded ' + followingEntry.name + ' from ' + file.name + '.';
+    $('backStatus').textContent = 'Both JSON files extracted locally from ' + file.name + '.';
+  } catch (e) { showBackError(e.message || 'Could not read this ZIP file.'); $('backStatus').textContent = 'ZIP import failed.'; }
+  input.value = '';
+});
+$('backClear').addEventListener('click', () => {
+  $('backFollowers').value = ''; $('backFollowing').value = '';
+  $('backFollowersFile').value = ''; $('backFollowingFile').value = ''; $('backZip').value = '';
+  $('backFollowersHint').textContent = 'Instagram export file is usually named followers_1.json.';
+  $('backFollowingHint').textContent = 'Instagram export file is usually named following.json.';
+  $('backResults').style.display = 'none'; hideBackError(); $('backStatus').textContent = 'Your data stays in this browser.';
+});
+$('backDemo').addEventListener('click', () => {
+  const followers = ['alex.rivera','jordan_park','sammydraws'];
+  const following = ['alex.rivera','jordan_park','sammydraws','taylor.chen','casey_w'];
+  $('backFollowers').value = JSON.stringify(followers.map(username => ({title:username,string_list_data:[{value:username,href:'https://www.instagram.com/'+username+'/'}]})), null, 2);
+  $('backFollowing').value = JSON.stringify({relationships_following:following.map(username => ({title:username,string_list_data:[{href:'https://www.instagram.com/_u/'+username+'/'}]}))}, null, 2);
+  $('backFollowersHint').textContent = 'Sample followers JSON loaded.'; $('backFollowingHint').textContent = 'Sample following JSON loaded.';
+  $('backStatus').textContent = 'Sample data loaded — click Find who doesn’t follow back.'; hideBackError();
+});
+
 </script>
-</body>
-</html>
