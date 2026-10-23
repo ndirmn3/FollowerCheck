@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>FollowerCheck — Follower Comparison</title>
+<title>FollowerCheck</title>
 <link rel="icon" href="favicon.ico" sizes="any">
 <style>
 :root{color-scheme:dark;--bg:#0b0d14;--panel:#131722;--panel2:#191f2d;--line:#2b3244;--text:#f3f5fb;--muted:#9ca6ba;--purple:#a78bfa;--green:#4ade80;--red:#fb7185;--blue:#7dd3fc}
@@ -18,6 +18,33 @@ header{margin-bottom:30px}.eyebrow{color:var(--purple);font-size:12px;font-weigh
 /* Find who doesn't follow back */
 .backcheck{margin-top:42px;padding-top:30px;border-top:1px solid var(--line);animation:fadeUp .45s ease both}.backcheck-intro{margin:0 0 18px;color:var(--muted);max-width:720px}.backcheck .inputs{margin-bottom:0}.backcheck .panel{background:linear-gradient(180deg,#171b29,#121621)}.backcheck textarea{height:200px}.backcheck-actions{display:flex;flex-wrap:wrap;align-items:center;gap:10px;margin:16px 0 18px}.zip-all{background:linear-gradient(110deg,#292344,#252b3b);border:1px solid #7160ad;color:#e9ddff}.back-results{display:none;margin-top:18px;animation:fadeUp .35s ease both}.back-results .list{margin-top:12px}.back-results .user{animation:fadeUp .25s ease both}.back-results .user:nth-child(2n){background:#151a27}.back-status{color:var(--muted);font-size:13px;margin-left:auto}.back-error{display:none;background:#3a1722;border:1px solid #7f3046;color:#fecdd3;border-radius:12px;padding:12px 15px;margin:0 0 16px}.back-summary{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;border:1px solid var(--line);border-radius:14px;padding:15px 17px;background:var(--panel)}.back-summary strong{font-size:26px;color:var(--red)}
 @keyframes fadeUp{from{opacity:0;transform:translateY(7px)}to{opacity:1;transform:translateY(0)}}
+
+/* Polished hover and pointer effects; comparison logic and sorting are unchanged. */
+.panel,.stat,.back-summary,.list,.backcheck-actions .btn,.actions .btn,.tab,.upload-btn{
+  position:relative;transition:transform .22s ease,border-color .22s ease,box-shadow .22s ease,background-color .22s ease;
+}
+.panel:hover,.stat:hover,.back-summary:hover{
+  transform:translateY(-4px);border-color:#7766b8;
+  box-shadow:0 12px 32px #0005,0 0 0 1px #a78bfa12,0 0 24px #a78bfa12;
+}
+.panel::before,.stat::before,.back-summary::before{
+  content:"";position:absolute;inset:0;border-radius:inherit;pointer-events:none;opacity:0;
+  background:radial-gradient(260px circle at var(--mx,50%) var(--my,50%),#a78bfa18,transparent 72%);
+  transition:opacity .2s ease;
+}
+.panel:hover::before,.stat:hover::before,.back-summary:hover::before{opacity:1}
+.btn:hover,.tab:hover,.upload-btn:hover{transform:translateY(-2px);box-shadow:0 6px 18px #0004}
+.tab,.btn,.upload-btn{transition:transform .18s ease,border-color .18s ease,box-shadow .18s ease,filter .18s ease}
+.primary:hover,.zip-all:hover{filter:brightness(1.09)}
+.user{transition:background-color .18s ease,transform .18s ease,padding-left .18s ease}
+.user:hover{background:#242039;padding-left:20px}
+.avatar{transition:transform .22s ease,box-shadow .22s ease}
+.user:hover .avatar{transform:scale(1.08) rotate(-4deg);box-shadow:0 0 0 3px #a78bfa22}
+textarea,input,.search{transition:border-color .2s ease,box-shadow .2s ease}
+textarea:hover,.search:hover{border-color:#59617a}
+body::after{content:"";position:fixed;inset:0;pointer-events:none;z-index:10;opacity:.32;
+  background:radial-gradient(360px circle at var(--pointer-x,50%) var(--pointer-y,20%),#a78bfa0b,transparent 75%)}
+@media(hover:none),(prefers-reduced-motion:reduce){body::after{display:none}.panel:hover,.stat:hover,.back-summary:hover,.user:hover,.btn:hover,.tab:hover,.upload-btn:hover{transform:none;box-shadow:none}.panel::before,.stat::before,.back-summary::before{display:none}.user:hover{padding-left:16px}}
 @media(prefers-reduced-motion:reduce){.backcheck,.back-results,.back-results .user{animation:none}}
 @media(max-width:700px){main{padding:26px 14px 50px}.inputs{grid-template-columns:1fr}.stats{gap:8px}.stat{padding:12px}.stat strong{font-size:25px}.status{width:100%;margin-left:0}textarea{height:190px}}
 </style>
@@ -109,6 +136,20 @@ header{margin-bottom:30px}.eyebrow{color:var(--purple);font-size:12px;font-weigh
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
 <script>
 const $ = id => document.getElementById(id);
+// Subtle cursor-following highlights on cards and across the page.
+if (window.matchMedia('(hover: hover) and (pointer: fine)').matches && !window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+  document.addEventListener('pointermove', event => {
+    document.documentElement.style.setProperty('--pointer-x', event.clientX + 'px');
+    document.documentElement.style.setProperty('--pointer-y', event.clientY + 'px');
+    const card = event.target.closest('.panel, .stat, .back-summary');
+    if (card) {
+      const rect = card.getBoundingClientRect();
+      card.style.setProperty('--mx', (event.clientX - rect.left) + 'px');
+      card.style.setProperty('--my', (event.clientY - rect.top) + 'px');
+    }
+  }, {passive:true});
+}
+
 let parsed = {new:[],lost:[],same:[]}, activeTab = 'new';
 let sortOrder = 'recent';
 const sortModes = ['recent','oldest','alpha'];
